@@ -15,10 +15,20 @@ public class Plant : MonoBehaviour
     {
         plantRenderer = GetComponent<PlantRenderer>();
         plantRenderer.Initialize(stats.GrowthStages);
+        TimeManager.OnNextDay += OnGrow;
     }
 
     private void OnGrow()
     {
+        if (CanGrow())
+            growthStage++;
         plantRenderer.Render(growthStage);
+    }
+
+    private bool CanGrow()
+    {
+        // Check if the plant is healthy enough to get to next stage
+        // If not apply penalty ?
+        return true;
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlantRenderer : MonoBehaviour
 {
-    [SerializeField] private Image image;
+    [SerializeField] private Image image = null;
 
     private PlantStage[] stages;
     private float nextAnimationTime;

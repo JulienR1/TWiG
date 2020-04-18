@@ -1,18 +1,38 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ClockUI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public RectTransform seasonClock;
+    public RectTransform timeClock;
+    public Image dayOverlay;
+
+    private void Start()
     {
-        
+        TimeManager.OnNextDay += OnNewDay;
+        OnNewDay();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+
+    }
+
+    private void OnNewDay()
+    {
+        SetLightRatio();
+    }
+
+    private void OnNewSeason()
+    {
+
+    }
+
+    private void SetLightRatio()
+    {
+        print(Game.instance.timeManager.LigthTime());
+        dayOverlay.fillAmount = Game.instance.timeManager.LigthTime() / Game.instance.timeManager.TotalTime();
     }
 }

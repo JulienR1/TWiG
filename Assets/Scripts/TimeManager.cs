@@ -9,8 +9,9 @@ public class TimeManager : MonoBehaviour, IManager
     public static event Action OnNextDay;
 
     public enum Season { SPRING, SUMMER, AUTUMN, WINTER };
-    private Season currenSeason = Season.SPRING;
+    private Season currentSeason = Season.SPRING;
 
+    [SerializeField] private float secondsPerGameTick = 2;
     [SerializeField] private float timePerDay = 180;
     [SerializeField] private int daysInSeason = 10;
 
@@ -22,7 +23,7 @@ public class TimeManager : MonoBehaviour, IManager
 
     public void Initialize()
     {
-        this.currenSeason = Season.SPRING;
+        this.currentSeason = Season.SPRING;
         this.currentDay = 1;
         this.timeToNextDayStart = timePerDay;
         timeIsEnabled = true;        
@@ -36,7 +37,7 @@ public class TimeManager : MonoBehaviour, IManager
         if (timeToNextDayStart <= 0)
         {
             NextDay();
-            if (currentDay % daysInSeason == 0)
+            if ((currentDay + daysInSeason/2) % daysInSeason == 0)
             {
                 NextSeason();
             }
@@ -57,18 +58,18 @@ public class TimeManager : MonoBehaviour, IManager
 
     private void NextSeason()
     {
-        currenSeason = (Season)(((int)currenSeason + 1) % Enum.GetValues(typeof(Season)).Length);
+        currentSeason = (Season)(((int)currentSeason + 1) % Enum.GetValues(typeof(Season)).Length);
         OnNextSeason?.Invoke();
     }
     
-    private float LigthTime()
+    public float LigthTime()
     {
-        float yearPercent = (currentDay / daysInSeason + (int)currenSeason);
-        return timePerDay / 3f * (1 + 0.5f * Mathf.Sin(0.5f * (float)Math.PI * yearPercent) + 1);
+        float yearProgress = currentDay / (float)daysInSeason;
+        return timePerDay / 4f * (2 + Mathf.Sin(Mathf.PI * yearProgress / 2f));
     }
 
-    private float DarkTime()
+    public float TotalTime()
     {
-        return timePerDay - LigthTime();
+        return timePerDay;
     }
 }

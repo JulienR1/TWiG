@@ -45,6 +45,6 @@ public class PlantRenderer : MonoBehaviour
         for (; growthIndex < stages.Length; growthIndex++)
             if (growthStage > stages[growthIndex].minMaxGrowth.x && growthStage < stages[growthIndex].minMaxGrowth.y)
                 break;
-        return growthIndex;
+        return --growthIndex;
     }
 }

@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c8374923bb7e2f47a2484276021208d, type: 3}
+  m_Name: Flower
+  m_EditorClassIdentifier: 
+  name: Flower
+  health: 20
+  minMaxWater: {x: 0, y: 0}
+  minMaxLight: {x: 0, y: 0}
+  minMaxTemperature: {x: 0, y: 0}
+  minNutrients: 0
+  growthStages:
+  - sprites:
+    - {fileID: 8591533231565066105, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: -7955193268978623404, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: 897878412386164280, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: -8035952563824040590, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: -4807000962642994248, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: -1834414038415029590, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: 3563450211287396523, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: 7050161957002004369, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: 2362167693445892924, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: 1974747534596792872, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: 2081129612548366391, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: -6336453194232770394, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: -6588013064155580756, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: 1569793652351610587, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: 628617045051657192, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: 4973239524936225076, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: 6245811245539080203, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    - {fileID: 5121536010671198940, guid: 034031bc64c76964d986a51bd3204121, type: 3}
+    animationTime: 0.2
+    minMaxGrowth: {x: 0, y: 0}
+  growthPerDay: 0

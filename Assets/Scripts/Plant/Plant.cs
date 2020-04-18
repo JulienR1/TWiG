@@ -2,17 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PlantRenderer))]
 public class Plant : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private PlantRenderer plantRenderer;
+
+    [SerializeField] private PlantStats stats = null;
+
+    private int growthStage = 0;
+
+    private void Start()
     {
-        
+        plantRenderer = GetComponent<PlantRenderer>();
+        plantRenderer.Initialize(stats.GrowthStages);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnGrow()
     {
-        
+        plantRenderer.Render(growthStage);
     }
 }

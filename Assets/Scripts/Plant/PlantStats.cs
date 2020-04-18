@@ -32,6 +32,7 @@ public class PlantStats : ScriptableObject
 [System.Serializable]
 public class PlantStage
 {
-    public Sprite sprite;
+    public Sprite[] sprites;
+    public float animationTime;
     public Vector2Int minMaxGrowth;
 }

@@ -94,4 +94,10 @@ public class TimeManager : MonoBehaviour, IManager
     {
         return 1 - (tickToDayStart - tick - 1 + timeToNextTick / secondsPerGameTick) / ticksPerDay;
     }
+
+    public float SeasonPercent()
+    {
+        int seasonCount = Enum.GetValues(typeof(Season)).Length;
+        return ((currentDay - 1) % (daysInSeason * seasonCount) + RevolutionPercent()) / (float)(daysInSeason * seasonCount);
+    }
 }

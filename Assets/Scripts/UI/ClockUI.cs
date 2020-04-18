@@ -17,7 +17,12 @@ public class ClockUI : MonoBehaviour
 
     private void Update()
     {
+        UpdateClockRotation();
+    }
 
+    private void UpdateClockRotation()
+    {
+        timeClock.rotation = Quaternion.Euler(Vector3.forward * 360 * Game.instance.timeManager.RevolutionPercent());
     }
 
     private void OnNewDay()
@@ -32,7 +37,6 @@ public class ClockUI : MonoBehaviour
 
     private void SetLightRatio()
     {
-        print(Game.instance.timeManager.LigthTime());
-        dayOverlay.fillAmount = Game.instance.timeManager.LigthTime() / Game.instance.timeManager.TotalTime();
+        dayOverlay.fillAmount = Game.instance.timeManager.LigthTime() / Game.instance.timeManager.RevolutionTime();
     }
 }

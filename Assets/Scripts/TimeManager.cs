@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour, IManager
 {
+    public static event Action OnTick;
     public static event Action OnNextSeason;
     public static event Action OnNextDay;
 
@@ -12,20 +13,24 @@ public class TimeManager : MonoBehaviour, IManager
     private Season currentSeason = Season.SPRING;
 
     [SerializeField] private float secondsPerGameTick = 2;
-    [SerializeField] private float timePerDay = 180;
+    [SerializeField] private float ticksPerDay = 180;
     [SerializeField] private int daysInSeason = 10;
 
     private static bool timeIsEnabled;
     private static bool TimeIsEnabled { get => timeIsEnabled; }
 
+    private int tick = 0;
     private int currentDay = 0;
-    private float timeToNextDayStart = 0;
+    private float tickToDayStart = 0;
+    private float timeToNextTick = 0;
 
     public void Initialize()
     {
+        this.tick = 0;
         this.currentSeason = Season.SPRING;
         this.currentDay = 1;
-        this.timeToNextDayStart = timePerDay;
+        this.tickToDayStart = ticksPerDay;
+        this.timeToNextTick = secondsPerGameTick;
         timeIsEnabled = true;        
     }
 
@@ -34,15 +39,27 @@ public class TimeManager : MonoBehaviour, IManager
         if (!TimeIsEnabled)
             return;
 
-        if (timeToNextDayStart <= 0)
+        if (timeToNextTick <= 0)
+            Tick();
+
+        timeToNextTick -= Time.deltaTime;
+    }
+
+    private void Tick()
+    {
+        tick++;
+        timeToNextTick = secondsPerGameTick;
+
+        if (tick >= tickToDayStart)
         {
             NextDay();
-            if ((currentDay + daysInSeason/2) % daysInSeason == 0)
+            if ((currentDay + daysInSeason / 2) % daysInSeason == 0)
             {
                 NextSeason();
             }
         }
-        timeToNextDayStart -= Time.deltaTime;
+
+        OnTick?.Invoke();
     }
 
     private void Pause() => timeIsEnabled = false;
@@ -52,7 +69,7 @@ public class TimeManager : MonoBehaviour, IManager
     private void NextDay()
     {
         currentDay++;
-        timeToNextDayStart = timePerDay;
+        tickToDayStart = tick + ticksPerDay;
         OnNextDay?.Invoke();
     }
 
@@ -65,11 +82,16 @@ public class TimeManager : MonoBehaviour, IManager
     public float LigthTime()
     {
         float yearProgress = currentDay / (float)daysInSeason;
-        return timePerDay / 4f * (2 + Mathf.Sin(Mathf.PI * yearProgress / 2f));
+        return ticksPerDay / 4f * (2 + Mathf.Sin(Mathf.PI * yearProgress / 2f));
     }
 
-    public float TotalTime()
+    public float RevolutionTime()
     {
-        return timePerDay;
+        return ticksPerDay;
+    }
+
+    public float RevolutionPercent()
+    {
+        return 1 - (tickToDayStart - tick - 1 + timeToNextTick / secondsPerGameTick) / ticksPerDay;
     }
 }

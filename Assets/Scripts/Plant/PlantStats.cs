@@ -6,7 +6,8 @@ using UnityEngine;
 public class PlantStats : ScriptableObject
 {
     [SerializeField] new private string name = "Plant";
-    [SerializeField] private float health = 20;
+    [SerializeField] private int health = 20;
+    [SerializeField] private int minHealthToGrow = 40;
 
     [Header("Effect stats")]
     [SerializeField] private Vector2 minMaxWater = Vector2.zero;
@@ -19,7 +20,8 @@ public class PlantStats : ScriptableObject
     [SerializeField] private int growthPerDay = 0;
 
     public string Name { get => name; }
-    public float Health { get => health; }
+    public int Health { get => health; }
+    public int MinHealthToGrow { get => minHealthToGrow; }
     public Vector2 MinMaxWater { get => minMaxWater; }
     public Vector2 MinMaxLight { get => minMaxLight; }
     public Vector2 MinMaxTemperature { get => minMaxTemperature; }

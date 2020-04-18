@@ -26,13 +26,49 @@ public class Plant : MonoBehaviour
         TimeManager.OnNextDay += Grow;
 
         this.health = stats.Health;
+        SetAverageStats();
+    }
+
+    private void SetAverageStats()
+    {
+        water = (stats.MinMaxWater.x + stats.MinMaxWater.y) / 2f;
+        lumination = (stats.MinMaxLight.x + stats.MinMaxLight.y) / 2f;
+        temperature = (stats.MinMaxTemperature.x + stats.MinMaxTemperature.y) / 2f;
+        nutrients = (1 - stats.MinNutrients) / 2f;
     }
 
     private void ApplyEffects()
     {
-        // Modifier les stats selon ce qui vient de se passer
-        // Set la vie en fonction des stats (+ ou -)
-        // Creve si pas assez de vie
+        DisruptStats();
+        UpdateHealth();
+        if (health <= 0)
+            Die();
+    }
+
+    private void DisruptStats()
+    {
+
+    }
+
+    private void UpdateHealth()
+    {
+        float healthDiff = 0;
+        healthDiff += GetStatEffectOnHealth(water, stats.MinMaxWater);
+        healthDiff += GetStatEffectOnHealth(lumination, stats.MinMaxLight);
+        healthDiff += GetStatEffectOnHealth(temperature, stats.MinMaxTemperature);
+        healthDiff += ((nutrients >= stats.MinNutrients) ? 1 : (stats.MinNutrients - nutrients) / stats.MinNutrients) * stats.MaxHealthGain / 4f;
+
+        this.health += Mathf.FloorToInt(healthDiff);
+    }
+
+    private float GetStatEffectOnHealth(float value, Vector2 limits)
+    {
+        return ((value > limits.x && value < limits.y) ? 1 : 0 - DistanceFromLimits(value, limits) / 4f) * stats.MaxHealthGain;
+    }
+
+    private void Die()
+    {
+        Game.instance.GameOver();
     }
 
     private void Grow()
@@ -61,5 +97,11 @@ public class Plant : MonoBehaviour
             validStatCount++;
 
         return validStatCount >= MIN_VALID_STAT_COUNT;
+    }
+
+    private float DistanceFromLimits(float value, Vector2 limits)
+    {
+        float center = (limits.x + limits.y) / 2f;
+        return Mathf.Abs((value - center) / center);
     }
 }

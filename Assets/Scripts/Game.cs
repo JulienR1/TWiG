@@ -19,4 +19,9 @@ public class Game : MonoBehaviour
         foreach (IManager manager in managers)
             manager.Initialize();
     }
+
+    public void GameOver()
+    {
+
+    }
 }

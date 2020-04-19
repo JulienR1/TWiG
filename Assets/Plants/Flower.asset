@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Flower
   health: 20
-  minMaxWater: {x: 0, y: 0}
+  minHealthToGrow: 40
+  maxHealthGain: 5
+  minMaxWater: {x: 5, y: 10}
   minMaxLight: {x: 0, y: 0}
   minMaxTemperature: {x: 0, y: 0}
   minNutrients: 0

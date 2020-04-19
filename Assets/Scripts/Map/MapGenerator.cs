@@ -3,8 +3,7 @@ using System.Collections;
 
 public class MapGenerator : MonoBehaviour
 {
-
-    public enum DrawMode { NoiseMap, ColourMap, FalloffMap };
+    public enum DrawMode { NoiseMap, ColourMap, FalloffMap, Hidden };
     public DrawMode drawMode;
 
     public int mapWidth;
@@ -26,13 +25,15 @@ public class MapGenerator : MonoBehaviour
     private float[,] falloffMap;
     [Range(1,10)]public float falloffStartFactor = 2f;
 
-    private void Start()
-    {
-        falloffMap = FalloffGenerator.GenerateFalloffMap(mapWidth, falloffStartFactor);
-    }
-
     public void GenerateMap()
     {
+        MapDisplay display = FindObjectOfType<MapDisplay>();
+        if (drawMode == DrawMode.Hidden)
+        {
+            display.DrawNone();
+            return;
+        }
+
         float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistance, lacunarity, offset);
 
         Color[] colourMap = new Color[mapWidth * mapHeight];
@@ -53,7 +54,6 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        MapDisplay display = FindObjectOfType<MapDisplay>();
         if (drawMode == DrawMode.NoiseMap)
         {
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(noiseMap));
@@ -66,6 +66,12 @@ public class MapGenerator : MonoBehaviour
         {
             display.DrawTexture(TextureGenerator.TextureFromHeightMap(FalloffGenerator.GenerateFalloffMap(mapWidth, falloffStartFactor)));
         }
+    }
+
+    public float[,] GetMap()
+    {
+        falloffMap = FalloffGenerator.GenerateFalloffMap(mapWidth, falloffStartFactor);
+        return Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistance, lacunarity, offset);
     }
 
     void OnValidate()

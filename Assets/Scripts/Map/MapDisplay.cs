@@ -7,8 +7,13 @@ public class MapDisplay : MonoBehaviour
 
     public void DrawTexture(Texture2D texture)
     {
+        textureRender.enabled = true;
         textureRender.sharedMaterial.mainTexture = texture;
-        textureRender.transform.localScale = new Vector3(texture.width, 1, texture.height);
+    }
+
+    public void DrawNone()
+    {
+        textureRender.enabled = false;
     }
 
 }

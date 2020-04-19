@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour, IManager
 {
-    private TaskMenu taskMenu = null;
+    [SerializeField] private TaskMenu taskMenu = null;
 
     private Stack<Menu> menuStack;
 

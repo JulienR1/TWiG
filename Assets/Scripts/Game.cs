@@ -9,8 +9,8 @@ public class Game : MonoBehaviour
 
     public TimeManager timeManager { get; private set; }
     public UIManager uiManager { get; private set; }
-
-    public Menu menu;
+    public World world { get; private set; }
+    public Player player { get; private set; }
 
     private void Awake()
     {
@@ -19,14 +19,11 @@ public class Game : MonoBehaviour
         List<IManager> managers = new List<IManager>();
         managers.Add(timeManager = GetComponent<TimeManager>());
         managers.Add(uiManager = GetComponent<UIManager>());
+        managers.Add(world = FindObjectOfType<World>());
+        managers.Add(player = FindObjectOfType<Player>());
 
         foreach (IManager manager in managers)
             manager.Initialize();
-    }
-
-    private void Start()
-    {
-        uiManager.OpenMenu(menu);
     }
 
     public void GameOver()

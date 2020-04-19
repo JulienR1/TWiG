@@ -4,15 +4,35 @@ using UnityEngine;
 
 public class TaskSlot : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private RectTransform emptySection, taskSection;
+
+    private Task task;
+
+    private void Start()
     {
-        
+        task = null;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void CreateTask()
     {
-        
+        Game.instance.uiManager.BindNewTask(this);
+    }
+
+    public void AssignTask(Task task)
+    {
+        this.task = task;
+        ToggleUI();
+    }
+
+    public void RemoveTask()
+    {
+        this.task = null;
+        ToggleUI();
+    }
+
+    private void ToggleUI()
+    {
+        emptySection.gameObject.SetActive(task == null);
+        taskSection.gameObject.SetActive(task != null);
     }
 }

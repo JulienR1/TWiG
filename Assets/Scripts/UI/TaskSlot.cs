@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TaskSlot : MonoBehaviour
 {
-    private RectTransform emptySection, taskSection;
-
+    [SerializeField] private RectTransform emptySection = null;
+    [SerializeField] private RectTransform taskSection = null;
     private Task task;
 
     private void Start()
@@ -13,9 +13,9 @@ public class TaskSlot : MonoBehaviour
         task = null;
     }
 
-    public void CreateTask()
+    public void EditTask()
     {
-        Game.instance.uiManager.BindNewTask(this);
+        Game.instance.uiManager.BindTask(this);
     }
 
     public void AssignTask(Task task)

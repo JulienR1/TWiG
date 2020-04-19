@@ -13,7 +13,7 @@ public class UIManager : MonoBehaviour, IManager
         menuStack = new Stack<Menu>();
     }
 
-    public void BindNewTask(TaskSlot slot)
+    public void BindTask(TaskSlot slot)
     {
         OpenMenu(taskMenu);
         taskMenu.BindToTaskSlot(slot);

@@ -26,7 +26,7 @@ public class Game : MonoBehaviour
 
     private void Start()
     {
-        menu.Open();
+        uiManager.OpenMenu(menu);
     }
 
     public void GameOver()

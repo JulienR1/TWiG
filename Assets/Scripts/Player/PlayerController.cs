@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private Transform playerSprite;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float interactionMinDistance = 0.5f;
 
@@ -20,8 +21,10 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        currentLayer = Mathf.Clamp(Mathf.RoundToInt(transform.position.z), 0, Game.instance.world.GetLayerCount());
+        currentLayer = Mathf.Clamp(Mathf.RoundToInt(transform.position.z), 0, Game.instance.world.GetLayerCount());        
         IsMoving = false;
+
+        UpdateScaleAndPosition();
     }
 
     private void Update()
@@ -35,6 +38,7 @@ public class PlayerController : MonoBehaviour
 
             if (ReachedTarget())
             {
+                velocity = Vector3.zero;
                 IsMoving = false;
                 OnTargetReached();
             }
@@ -42,38 +46,63 @@ public class PlayerController : MonoBehaviour
     }    
 
     public void MoveToTarget(WorldInteractable target, Func<bool> callback)
-    {        
-        direction = (target.transform.position - transform.position).normalized;
-        velocity = direction * moveSpeed / World.GetLayerScaleFactor(currentLayer);
-
+    {
+        velocity = Vector3.zero;
         IsMoving = true;
         currentTarget = target;
         OnTargetReached = callback;
     }
 
-    private void WalkToLayer(int direction)
-    {
-
-    }
-    
     private void WalkAtTarget()
     {
+        if (velocity == Vector3.zero)
+            CalculateVelocity(currentTarget.transform.position);
         transform.position += velocity * Time.deltaTime;
+    }
+
+    private void WalkToLayer(int direction)
+    {
+        Vector3 limitPos = new Vector3(direction * Game.instance.world.GetWorldLimit() * GetLayerSign(), transform.position.y, transform.position.z);
+        if (velocity == Vector3.zero)
+            CalculateVelocity(limitPos);
+
+        transform.position += velocity * Time.deltaTime;
+
+        if (Vector3.Distance(transform.position, limitPos) <= interactionMinDistance)
+            ChangeLayer(direction);
+    }
+
+    private void CalculateVelocity(Vector3 targetPos)
+    {
+        direction = (targetPos - transform.position).normalized;
+        velocity = direction * moveSpeed * World.GetLayerScaleFactor(currentLayer);
+    }
+
+    private void ChangeLayer(int direction)
+    {
+        currentLayer -= direction;
+        transform.position -= Vector3.forward * direction;                
+        velocity = Vector3.zero;
+
+        UpdateScaleAndPosition();
     }
 
     private bool ReachedTarget()
     {
         if (currentTarget.Layer == currentLayer)
-        {
-            float deltaX = (transform.position.x - currentTarget.transform.position.x) / World.GetLayerScaleFactor(currentLayer);
-            float deltaY = (transform.position.y - currentTarget.transform.position.y) / World.GetLayerScaleFactor(currentLayer);
-            float squaredDistanceToTarget = Mathf.Pow(deltaX, 2) + Mathf.Pow(deltaY, 2);
-            float minDistanceToTargetSquared = Mathf.Pow(interactionMinDistance, 2);
-            if (squaredDistanceToTarget <= minDistanceToTargetSquared)
-            {
+            if (Vector3.Distance(transform.position, currentTarget.transform.position) <= interactionMinDistance)
                 return true;
-            }
-        }            
         return false;
+    }
+
+    private void UpdateScaleAndPosition()
+    {
+        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+        playerSprite.localScale = Vector3.one * World.GetLayerScaleFactor(currentLayer);
+    }
+
+    private int GetLayerSign()
+    {
+        return currentLayer % 2 == 0 ? 1 : -1;
     }
 }

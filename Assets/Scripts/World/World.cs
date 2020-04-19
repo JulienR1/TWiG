@@ -18,6 +18,11 @@ public class World : MonoBehaviour, IManager
         return Mathf.Exp(2.5f - layerNumber);
     }
 
+    public float GetWorldLimit()
+    {
+        return worldLimit;
+    }
+
     public int GetLayerCount()
     {
         return layerCount;

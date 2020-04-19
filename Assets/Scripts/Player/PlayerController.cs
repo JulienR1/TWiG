@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float interactionMinDistance = 0.5f;
 
     private int currentLayer;
-    private const int DIRECTION_TO_CLOSEST_LAYER = -1;
+    private const int DIRECTION_TO_CLOSEST_LAYER = 1;
     private const int DIRECTION_TO_FURTHEST_LAYER = -1;
 
     public bool IsMoving { get; private set; }
@@ -68,13 +68,13 @@ public class PlayerController : MonoBehaviour
 
         transform.position += velocity * Time.deltaTime;
 
-        if (Vector3.Distance(transform.position, limitPos) <= interactionMinDistance)
+        if (Math.Abs(transform.position.x - limitPos.x) <= interactionMinDistance)
             ChangeLayer(direction);
     }
 
     private void CalculateVelocity(Vector3 targetPos)
     {
-        direction = (targetPos - transform.position).normalized;
+        direction = Vector3.right * Mathf.Sign((targetPos - transform.position).x);
         velocity = direction * moveSpeed * World.GetLayerScaleFactor(currentLayer);
     }
 
@@ -90,14 +90,14 @@ public class PlayerController : MonoBehaviour
     private bool ReachedTarget()
     {
         if (currentTarget.Layer == currentLayer)
-            if (Vector3.Distance(transform.position, currentTarget.transform.position) <= interactionMinDistance)
+            if (Mathf.Abs(transform.position.x - currentTarget.transform.position.x) <= interactionMinDistance)
                 return true;
         return false;
     }
 
     private void UpdateScaleAndPosition()
     {
-        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+        transform.position = new Vector3(transform.position.x, Game.instance.world.GetLayerFloor(currentLayer), transform.position.z);
         playerSprite.localScale = Vector3.one * World.GetLayerScaleFactor(currentLayer);
     }
 

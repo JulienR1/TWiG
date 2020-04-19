@@ -15,12 +15,4 @@ public class Player : MonoBehaviour, IManager
         controller = GetComponent<PlayerController>();
         animator = GetComponent<PlayerAnimator>();
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            controller.MoveToTarget(target, () => { print("yup"); return true; });
-        }
-    }
 }

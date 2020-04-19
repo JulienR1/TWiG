@@ -5,7 +5,7 @@ using UnityEngine;
 public class World : MonoBehaviour, IManager
 {
     [SerializeField] private float worldLimit = 12f;
-    [SerializeField] private int layerCount = 4;
+    [SerializeField] private float[] layerHeights;
 
     public void Initialize()
     {
@@ -25,6 +25,11 @@ public class World : MonoBehaviour, IManager
 
     public int GetLayerCount()
     {
-        return layerCount;
+        return layerHeights.Length;
+    }
+
+    public float GetLayerFloor(int layer)
+    {
+        return layerHeights[layer];
     }
 }

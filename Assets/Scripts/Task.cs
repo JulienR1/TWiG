@@ -4,15 +4,7 @@ using UnityEngine;
 
 public class Task : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public enum TaskType { WATER, NUTRIENT, TEMPERATURE, LIGHT, NONE };
+    public TaskType type;
+    public float value;
 }

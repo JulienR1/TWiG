@@ -30,6 +30,11 @@ public class TaskSlot : MonoBehaviour
         ToggleUI();
     }
 
+    public Task GetTask()
+    {
+        return task;
+    }
+
     private void ToggleUI()
     {
         emptySection.gameObject.SetActive(task == null);

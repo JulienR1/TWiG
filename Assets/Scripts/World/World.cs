@@ -5,10 +5,13 @@ using UnityEngine;
 public class World : MonoBehaviour, IManager
 {
     [SerializeField] private float worldLimit = 12f;
-    [SerializeField] private float[] layerHeights;
+    [SerializeField] private float[] layerHeights = null;
+
+    public Board board { get; private set; }
 
     public void Initialize()
     {
+        board = FindObjectOfType<Board>();
         // Detect world limits automatically?
         // Get elements that populate it, sort by layer
     }

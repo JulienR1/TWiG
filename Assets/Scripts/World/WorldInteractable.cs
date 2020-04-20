@@ -11,8 +11,8 @@ public class WorldInteractable : MonoBehaviour
         Layer = Mathf.Clamp(Mathf.RoundToInt(transform.position.z), 0, Game.instance.world.GetLayerCount());
     }
 
-    public void Interact()
+    public virtual T Interact<T>()
     {
-
+        return default(T);
     }
 }

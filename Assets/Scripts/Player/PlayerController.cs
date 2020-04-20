@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private Transform playerSprite;
+    [SerializeField] private Transform playerSprite = null;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float interactionMinDistance = 0.5f;
 

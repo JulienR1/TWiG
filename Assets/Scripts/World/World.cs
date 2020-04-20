@@ -13,6 +13,7 @@ public class World : MonoBehaviour, IManager
     public static Composter composter { get; private set; }
     public static AppleTree appleTree { get; private set; }
     public static Fire fire { get; private set; }
+    public static Pinwheel pinwheel { get; private set; }
 
     public void Initialize()
     {
@@ -24,6 +25,7 @@ public class World : MonoBehaviour, IManager
         composter = FindObjectOfType<Composter>();
         appleTree = FindObjectOfType<AppleTree>();
         fire = FindObjectOfType<Fire>();
+        pinwheel = FindObjectOfType<Pinwheel>();
     }
 
     public static float GetLayerScaleFactor(int layerNumber)

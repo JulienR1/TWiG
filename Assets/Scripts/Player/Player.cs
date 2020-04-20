@@ -242,7 +242,23 @@ public class Player : MonoBehaviour, IManager
 
     private void ExecutePinwheelSequence()
     {
-
+        switch (taskProgress)
+        {
+            case 0:
+                controller.MoveToTarget(World.pinwheel, ReachedTarget);
+                animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING);
+                animator.ShowInteraction(PlayerAnimator.Interaction.PINWHEEL);
+                break;
+            case 1:
+                World.pinwheel.StartSpin(currentTask.value);
+                animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
+                ticksToWait = ticksPerInteraction;
+                taskProgress++;
+                break;
+            case 2:
+                CompleteTask();
+                break;
+        }
     }
 
     private bool ReachedTarget()

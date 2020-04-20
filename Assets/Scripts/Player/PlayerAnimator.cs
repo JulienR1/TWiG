@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerAnimator : MonoBehaviour
 {
     public enum PlayerState { IDLE, WALKING, WALKING_WATER, WALKING_APPLE, WALKING_COMPOST };
-    public enum Interaction { INTERACTING, SUCCESS, FAIL, WATER, APPLE, COMPOST, TEMPERATURE, LIGHT };
+    public enum Interaction { INTERACTING, SUCCESS, FAIL, WATER, APPLE, COMPOST, FIRE, PINWHEEL, LIGHT };
 
     private Animator animator = null;
     private PlayerState currentState = PlayerState.IDLE;

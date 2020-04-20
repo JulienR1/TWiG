@@ -62,6 +62,16 @@ public class Plant : WorldInteractable
 
     }
 
+    public void Heat(float amount)
+    {
+
+    }
+
+    public void Cool(float amount)
+    {
+
+    }
+
     private void UpdateHealth()
     {
         float healthDiff = 0;

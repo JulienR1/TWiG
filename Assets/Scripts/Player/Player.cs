@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerController)),RequireComponent(typeof(PlayerAnimator))]
 public class Player : MonoBehaviour, IManager
 {
+    [SerializeField] private Transform handPosition = null;
+
     private PlayerController controller;
     private PlayerAnimator animator;    
 
@@ -25,6 +27,14 @@ public class Player : MonoBehaviour, IManager
         TimeManager.OnTick += UpdateBehaviour;
 
         animator.ToggleAnimation(PlayerAnimator.PlayerState.IDLE);
+    }
+
+    private void Update()
+    {
+        if (handItem.IsHeld)
+        {
+            handItem.item.position = handPosition.position;
+        }
     }
 
     private void UpdateBehaviour()

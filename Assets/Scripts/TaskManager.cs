@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TaskManager : IManager
+public class TaskManager : MonoBehaviour, IManager
 {
     [SerializeField] private TaskIcon[] taskIcons = null;    
 

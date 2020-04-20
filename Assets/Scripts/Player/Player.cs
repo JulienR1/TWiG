@@ -67,7 +67,7 @@ public class Player : MonoBehaviour, IManager
                 ExecuteNutrientSequence();
                 break;
             case Task.TaskType.APPLE: break;
-            case Task.TaskType.TEMPERATURE: break;
+            case Task.TaskType.FIRE: break;
             case Task.TaskType.LIGHT: break;
             default:
                 animator.ClearAnimation();
@@ -88,7 +88,7 @@ public class Player : MonoBehaviour, IManager
                 ticksToWait = Mathf.Clamp(0, Mathf.RoundToInt(Game.instance.world.well.Interact<int>() * currentTask.value), 30);
                 animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
                 handItem.quantity = Game.instance.world.well.GetMaxWater() * currentTask.value;
-                handItem.isHeld = Game.instance.world.well.TakeItem();
+                handItem.item = Game.instance.world.well.TakeItem();
                 taskProgress++;
                 break;
             case 2:
@@ -106,8 +106,7 @@ public class Player : MonoBehaviour, IManager
                 animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING_WATER);
                 break;
             case 5:
-                Game.instance.world.well.GiveItem();
-                handItem.isHeld = false;
+                Game.instance.world.well.GiveItem(handItem.item);
                 CompleteTask();
                 break;
         }
@@ -133,7 +132,7 @@ public class Player : MonoBehaviour, IManager
                 else
                 {
                     handItem.quantity = World.composter.TakeFertilizer(currentTask.value);
-                    handItem.isHeld = World.composter.TakeItem();
+                    handItem.item = World.composter.TakeItem();
                     taskProgress++;
                 }
                 break;
@@ -152,8 +151,7 @@ public class Player : MonoBehaviour, IManager
                 animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING_COMPOST);
                 break;
             case 5:
-                World.composter.GiveItem();
-                handItem.isHeld = false;
+                World.composter.GiveItem(handItem.item);
                 CompleteTask();
                 break;
         }
@@ -170,6 +168,8 @@ public class Player : MonoBehaviour, IManager
     {
         currentTask = null;
         taskProgress = 0;
+        handItem.item = null;
+        handItem.quantity = 0;
     }
 
     public bool HasTask()
@@ -180,12 +180,14 @@ public class Player : MonoBehaviour, IManager
 
 public class HandItem
 {
-    public bool isHeld;
+    public Transform item;
     public float quantity;
+
+    public bool IsHeld { get => item != null; }
 
     public HandItem()
     {
-        isHeld = false;
+        item = null;
         quantity = 0;
     }
 }

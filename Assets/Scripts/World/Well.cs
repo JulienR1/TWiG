@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Well : WorldInteractable
-{
+{    
     [SerializeField] private float maxWater = 5;
     [SerializeField] private int baseTicksToFill = 3;
 

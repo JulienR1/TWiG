@@ -34,9 +34,9 @@ public class PlantRenderer : MonoBehaviour
 
     private void Animate()
     {
-        nextAnimationTime = Time.time + stages[currentGrowthIndex].animationTime;
-        spriteRenderer.sprite = stages[currentGrowthIndex].sprites[currentAnimationIndex];
-        currentAnimationIndex = (currentAnimationIndex + 1) % stages[currentGrowthIndex].sprites.Length;
+    //    nextAnimationTime = Time.time + stages[currentGrowthIndex].animationTime;
+    //    spriteRenderer.sprite = stages[currentGrowthIndex].sprites[currentAnimationIndex];
+    //    currentAnimationIndex = (currentAnimationIndex + 1) % stages[currentGrowthIndex].sprites.Length;
     }
 
     private int GetCurrentGrowthIndex(int growthStage)

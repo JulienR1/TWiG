@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform playerSprite = null;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float interactionMinDistance = 0.5f;
+    [SerializeField] private string[] layers = null;
 
     private int currentLayer;
     private const int DIRECTION_TO_CLOSEST_LAYER = 1;
@@ -99,6 +100,7 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = new Vector3(transform.position.x, Game.instance.world.GetLayerFloor(currentLayer), transform.position.z);
         playerSprite.localScale = Vector3.one * World.GetLayerScaleFactor(currentLayer);
+        playerSprite.GetComponent<SpriteRenderer>().sortingLayerName = layers[currentLayer];
     }
 
     private int GetLayerSign()

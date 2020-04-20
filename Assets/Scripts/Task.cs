@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Task
 {
-    public enum TaskType { WATER, NUTRIENT, TEMPERATURE, LIGHT, APPLE, NONE };
+    public enum TaskType { WATER, APPLE, NUTRIENT, FIRE, PINWHEEL, LIGHT, SLEEP, NONE };
     public TaskType type;
     public float value;
 

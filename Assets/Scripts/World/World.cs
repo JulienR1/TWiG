@@ -7,10 +7,11 @@ public class World : MonoBehaviour, IManager
     [SerializeField] private float worldLimit = 12f;
     [SerializeField] private float[] layerHeights = null;
 
-    public Plant flower { get; private set; }
-    public Board board { get; private set; }
-    public Well well { get; private set; }
+    public static Plant flower { get; private set; }
+    public static Board board { get; private set; }
+    public static Well well { get; private set; }
     public static Composter composter { get; private set; }
+    public static AppleTree appleTree { get; private set; }
 
     public void Initialize()
     {
@@ -20,6 +21,7 @@ public class World : MonoBehaviour, IManager
         board = FindObjectOfType<Board>();
         well = FindObjectOfType<Well>();
         composter = FindObjectOfType<Composter>();
+        appleTree = FindObjectOfType<AppleTree>();
     }
 
     public static float GetLayerScaleFactor(int layerNumber)

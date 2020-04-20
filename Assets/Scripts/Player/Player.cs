@@ -44,9 +44,9 @@ public class Player : MonoBehaviour, IManager
 
         if (!HasTask())
         {
-            if (!Game.instance.world.board.IsEmpty())
+            if (!World.board.IsEmpty())
             {
-                controller.MoveToTarget(Game.instance.world.board, GetTaskFromBoard);
+                controller.MoveToTarget(World.board, GetTaskFromBoard);
                 animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING);
             }
         }
@@ -58,7 +58,7 @@ public class Player : MonoBehaviour, IManager
 
     private bool GetTaskFromBoard()
     {
-        currentTask = Game.instance.world.board.Interact<Task>();
+        currentTask = World.board.Interact<Task>();
         animator.ToggleAnimation(PlayerAnimator.PlayerState.IDLE);
         animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
         ticksToWait = ticksPerInteraction;
@@ -76,7 +76,9 @@ public class Player : MonoBehaviour, IManager
             case Task.TaskType.NUTRIENT:
                 ExecuteNutrientSequence();
                 break;
-            case Task.TaskType.APPLE: break;
+            case Task.TaskType.APPLE:
+                ExecuteAppleSequence();
+                break;
             case Task.TaskType.FIRE: break;
             case Task.TaskType.LIGHT: break;
             default:
@@ -90,33 +92,33 @@ public class Player : MonoBehaviour, IManager
         switch (taskProgress)
         {
             case 0:
-                controller.MoveToTarget(Game.instance.world.well, ReachedTarget);
+                controller.MoveToTarget(World.well, ReachedTarget);
                 animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING);
                 animator.ShowInteraction(PlayerAnimator.Interaction.WATER);
                 break;
             case 1:
-                ticksToWait = Mathf.Clamp(0, Mathf.RoundToInt(Game.instance.world.well.Interact<int>() * currentTask.value), 30);
+                ticksToWait = Mathf.Clamp(0, Mathf.RoundToInt(World.well.Interact<int>() * currentTask.value), 30);
                 animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
-                handItem.quantity = Game.instance.world.well.GetMaxWater() * currentTask.value;
-                handItem.item = Game.instance.world.well.TakeItem();
+                handItem.quantity = World.well.GetMaxWater() * currentTask.value;
+                handItem.item = World.well.TakeItem();
                 taskProgress++;
                 break;
             case 2:
-                controller.MoveToTarget(Game.instance.world.flower, ReachedTarget);
+                controller.MoveToTarget(World.flower, ReachedTarget);
                 animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING_WATER);
                 break;
             case 3:
                 animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
-                Game.instance.world.flower.Water(handItem.quantity);
+                World.flower.Water(handItem.quantity);
                 ticksToWait = ticksPerInteraction;
                 taskProgress++;
                 break;
             case 4:
-                controller.MoveToTarget(Game.instance.world.well, ReachedTarget);
+                controller.MoveToTarget(World.well, ReachedTarget);
                 animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING_WATER);
                 break;
             case 5:
-                Game.instance.world.well.GiveItem(handItem.item);
+                World.well.GiveItem(handItem.item);
                 CompleteTask();
                 break;
         }
@@ -147,12 +149,12 @@ public class Player : MonoBehaviour, IManager
                 }
                 break;
             case 2:
-                controller.MoveToTarget(Game.instance.world.flower, ReachedTarget);
+                controller.MoveToTarget(World.flower, ReachedTarget);
                 animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING_COMPOST);
                 break;
             case 3:
                 animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
-                Game.instance.world.flower.Fertilize((int)handItem.quantity);
+                World.flower.Fertilize((int)handItem.quantity);
                 ticksToWait = ticksPerInteraction;
                 taskProgress++;
                 break;
@@ -162,6 +164,51 @@ public class Player : MonoBehaviour, IManager
                 break;
             case 5:
                 World.composter.GiveItem(handItem.item);
+                CompleteTask();
+                break;
+        }
+    }
+
+    private void ExecuteAppleSequence()
+    {
+        switch (taskProgress)
+        {
+            case 0:
+                controller.MoveToTarget(World.appleTree, ReachedTarget);
+                animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING);
+                animator.ShowInteraction(PlayerAnimator.Interaction.APPLE);
+                break;
+            case 1:
+                int appleCount = World.appleTree.Interact<int>();
+                if (appleCount == 0)
+                {
+                    CompleteTask();
+                }
+                else
+                {
+                    handItem.quantity = appleCount;
+                    handItem.item = World.appleTree.TakeItem();
+                    animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
+                    ticksToWait = ticksPerInteraction * handItem.quantity;
+                    taskProgress++;
+                }
+                break;
+            case 2:
+                controller.MoveToTarget(World.composter, ReachedTarget);
+                animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING_APPLE);
+                break;
+            case 3:
+                World.composter.AddApples((int)handItem.quantity);
+                animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
+                ticksToWait = ticksPerInteraction;
+                taskProgress++;
+                break;
+            case 4:
+                controller.MoveToTarget(World.appleTree, ReachedTarget);
+                animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING);
+                break;
+            case 5:
+                World.appleTree.GiveItem(handItem.item);
                 CompleteTask();
                 break;
         }

@@ -22,7 +22,7 @@ public class ClockUI : MonoBehaviour
 
     private void UpdateClockRotation()
     {
-        timeClock.rotation = Quaternion.Euler(Vector3.forward * 360 * Game.instance.timeManager.RevolutionPercent());
+        timeClock.rotation = Quaternion.Euler(Vector3.forward * -360 * Game.instance.timeManager.RevolutionPercent());
         seasonClock.rotation = Quaternion.Euler(Vector3.forward * 360 * Game.instance.timeManager.SeasonPercent());
     }
 

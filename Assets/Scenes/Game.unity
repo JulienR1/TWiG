@@ -60907,6 +60907,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa34de70d2dccf349939a1262f998ce6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  heldItem: {fileID: 0}
+  maxHeathEmission: 5
+  baseEmissionDecreaseRate: 1
 --- !u!1 &1818715170
 GameObject:
   m_ObjectHideFlags: 0

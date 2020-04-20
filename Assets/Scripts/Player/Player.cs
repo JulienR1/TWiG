@@ -79,7 +79,12 @@ public class Player : MonoBehaviour, IManager
             case Task.TaskType.APPLE:
                 ExecuteAppleSequence();
                 break;
-            case Task.TaskType.FIRE: break;
+            case Task.TaskType.FIRE:
+                ExecuteFireSequence();
+                break;
+            case Task.TaskType.PINWHEEL:
+                ExecutePinwheelSequence();
+                break;
             case Task.TaskType.LIGHT: break;
             default:
                 animator.ClearAnimation();
@@ -212,6 +217,32 @@ public class Player : MonoBehaviour, IManager
                 CompleteTask();
                 break;
         }
+    }
+
+    private void ExecuteFireSequence()
+    {
+        switch (taskProgress)
+        {
+            case 0:
+                controller.MoveToTarget(World.fire, ReachedTarget);
+                animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING);
+                animator.ShowInteraction(PlayerAnimator.Interaction.FIRE);
+                break;
+            case 1:
+                World.fire.TurnOn(currentTask.value);
+                animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
+                ticksToWait = ticksPerInteraction;
+                taskProgress++;
+                break;
+            case 2:
+                CompleteTask();
+                break;
+        }
+    }
+
+    private void ExecutePinwheelSequence()
+    {
+
     }
 
     private bool ReachedTarget()

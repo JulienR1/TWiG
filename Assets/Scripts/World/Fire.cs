@@ -2,17 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fire : MonoBehaviour
+public class Fire : WorldInteractable
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private float maxHeathEmission = 5;
+    [SerializeField] private float baseEmissionDecreaseRate = 1;
+    private float currentHeathEmission;
+
+    protected override void Start()
     {
-        
+        base.Start();
+        TurnOff();
+
+        TimeManager.OnTick += DecreaseEmission;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void DecreaseEmission()
     {
-        
+        if (currentHeathEmission > 0)
+        {
+            currentHeathEmission -= baseEmissionDecreaseRate; // TODO be affected by season
+            currentHeathEmission = Mathf.Clamp(currentHeathEmission, 0, maxHeathEmission);
+        }
+
+        HeatFlower();
     }
+
+    private void HeatFlower()
+    {
+        World.flower.Heat(currentHeathEmission);
+    }
+
+    public void TurnOn(float intensityPercent)
+    {
+        currentHeathEmission = maxHeathEmission * intensityPercent;
+    }
+
+    private void TurnOff()
+    {
+        currentHeathEmission = 0;
+    }
+
 }

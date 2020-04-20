@@ -12,6 +12,7 @@ public class World : MonoBehaviour, IManager
     public static Well well { get; private set; }
     public static Composter composter { get; private set; }
     public static AppleTree appleTree { get; private set; }
+    public static Fire fire { get; private set; }
 
     public void Initialize()
     {
@@ -22,6 +23,7 @@ public class World : MonoBehaviour, IManager
         well = FindObjectOfType<Well>();
         composter = FindObjectOfType<Composter>();
         appleTree = FindObjectOfType<AppleTree>();
+        fire = FindObjectOfType<Fire>();
     }
 
     public static float GetLayerScaleFactor(int layerNumber)

@@ -100,4 +100,9 @@ public class TimeManager : MonoBehaviour, IManager
         int seasonCount = Enum.GetValues(typeof(Season)).Length;
         return ((currentDay - 1) % (daysInSeason * seasonCount) + RevolutionPercent()) / (float)(daysInSeason * seasonCount);
     }
+
+    public Season GetSeason()
+    {
+        return currentSeason;
+    }
 }

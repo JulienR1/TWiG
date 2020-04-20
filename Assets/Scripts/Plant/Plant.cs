@@ -16,6 +16,8 @@ public class Plant : WorldInteractable
     private float temperature;
     private float nutrients;
 
+    private float waterAverage, lightAverage, temperatureAverage;
+
     private int growthStage = 0;
 
     protected override void Start()
@@ -29,14 +31,20 @@ public class Plant : WorldInteractable
 
         this.health = stats.Health;
         SetAverageStats();
+
+        // TODO Subscribe to meteo event and apply effects
     }
 
     private void SetAverageStats()
     {
-        water = (stats.MinMaxWater.x + stats.MinMaxWater.y) / 2f;
-        lumination = (stats.MinMaxLight.x + stats.MinMaxLight.y) / 2f;
-        temperature = (stats.MinMaxTemperature.x + stats.MinMaxTemperature.y) / 2f;
-        nutrients = (1 - stats.MinNutrients) / 2f;
+        waterAverage = (stats.MinMaxWater.x + stats.MinMaxWater.y) / 2f;
+        lightAverage = (stats.MinMaxLight.x + stats.MinMaxLight.y) / 2f;
+        temperatureAverage = (stats.MinMaxTemperature.x + stats.MinMaxTemperature.y) / 2f;
+
+        water = waterAverage;
+        lumination = lightAverage;
+        temperature = temperatureAverage;
+        nutrients = stats.MinNutrients;
     }
 
     private void ApplyEffects()
@@ -49,27 +57,47 @@ public class Plant : WorldInteractable
 
     private void DisruptStats()
     {
+        float deltaTime = 1 / Game.instance.timeManager.RevolutionTime();
+        temperature += (temperature - temperatureAverage) / temperatureAverage * stats.DecayRate * deltaTime;
+        water += (water - waterAverage) / waterAverage * stats.DecayRate * deltaTime;
+        nutrients += (nutrients - stats.MinNutrients) / stats.MinNutrients * stats.DecayRate * deltaTime;
 
+        switch (Game.instance.timeManager.GetSeason())
+        {
+            case TimeManager.Season.SUMMER:
+                temperature += Mathf.Abs(temperature - temperatureAverage) * stats.DecayRate * deltaTime * 2;
+                water -= Mathf.Abs(water - waterAverage) * stats.DecayRate * deltaTime * 2;
+                break;
+            case TimeManager.Season.AUTUMN:
+                nutrients -= Mathf.Abs(nutrients - stats.MinNutrients) * stats.DecayRate * deltaTime * 2;
+                break;
+            case TimeManager.Season.WINTER:
+                temperature -= Mathf.Abs(temperature - temperatureAverage) * stats.DecayRate * deltaTime * 2;
+                water -= Mathf.Abs(water - waterAverage) * stats.DecayRate * deltaTime * 2;
+                break;
+        }
     }
 
     public void Water(float quantity)
     {
-
+        water += quantity;
     }
 
     public void Fertilize(int amount)
     {
-
+        nutrients += amount;
     }
 
     public void Heat(float amount)
     {
-
+        temperature += amount;
     }
 
     public void Cool(float amount)
     {
-
+        temperature -= amount;
+        if (temperature < 0)
+            temperature = 0;
     }
 
     private void UpdateHealth()

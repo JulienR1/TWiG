@@ -11,9 +11,11 @@ public class PlayerAnimator : MonoBehaviour
     private Animator animator = null;
     private PlayerState currentState = PlayerState.IDLE;
 
+    [SerializeField] private SpriteRenderer interactionSprite = null;
     [SerializeField] private InteractionImage[] interactions;
     [SerializeField] private int ticksToShowInteraction = 1;
 
+    private Interaction currentInteraction;
     private int ticksLeftForInteraction = 0;
 
     public void Initialize()
@@ -43,13 +45,17 @@ public class PlayerAnimator : MonoBehaviour
 
     public void ShowInteraction(Interaction interactionToRender)
     {
+        if (currentInteraction == interactionToRender)
+            return;
+
         foreach (InteractionImage img in interactions)
         {
             if (img.interaction == interactionToRender)
             {
-                // TODO Set image to img.image;
-                // TODO Activate image interaction renderer
+                interactionSprite.sprite = img.image;
+                interactionSprite.gameObject.SetActive(true);
                 ticksLeftForInteraction = ticksToShowInteraction;
+                currentInteraction = interactionToRender;
                 break;
             }
         }
@@ -57,13 +63,14 @@ public class PlayerAnimator : MonoBehaviour
 
     public void HideInteraction()
     {
-        // TODO Disable image interaction renderer
+        interactionSprite.gameObject.SetActive(false);
     }
 
     private void OnTick()
     {
         if (ticksLeftForInteraction <= 0)
             HideInteraction();
+        ticksLeftForInteraction--;
     }
 
     [System.Serializable]

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private Transform playerSprite = null;
+    [SerializeField] private Transform graphicsContainer = null;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float interactionMinDistance = 0.5f;
     [SerializeField] private string[] layers = null;
@@ -99,8 +99,9 @@ public class PlayerController : MonoBehaviour
     private void UpdateScaleAndPosition()
     {
         transform.position = new Vector3(transform.position.x, Game.instance.world.GetLayerFloor(currentLayer), transform.position.z);
-        playerSprite.localScale = Vector3.one * World.GetLayerScaleFactor(currentLayer);
-        playerSprite.GetComponent<SpriteRenderer>().sortingLayerName = layers[currentLayer];
+        graphicsContainer.localScale = Vector3.one * World.GetLayerScaleFactor(currentLayer);
+        foreach (SpriteRenderer sr in graphicsContainer.GetComponentsInChildren<SpriteRenderer>())
+            sr.sortingLayerName = layers[currentLayer];
     }
 
     private int GetLayerSign()

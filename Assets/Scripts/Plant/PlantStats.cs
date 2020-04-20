@@ -15,6 +15,7 @@ public class PlantStats : ScriptableObject
     [SerializeField] private Vector2 minMaxLight = Vector2.zero;
     [SerializeField] private Vector2 minMaxTemperature = Vector2.zero;
     [SerializeField] private float minNutrients = 0;
+    [SerializeField] private float decayRate = 0.5f;
 
     [Header("Growth stats")]
     [SerializeField] private PlantStage[] growthStages = null;
@@ -28,6 +29,7 @@ public class PlantStats : ScriptableObject
     public Vector2 MinMaxLight { get => minMaxLight; }
     public Vector2 MinMaxTemperature { get => minMaxTemperature; }
     public float MinNutrients { get => minNutrients; }
+    public float DecayRate { get => decayRate; }
 
     public PlantStage[] GrowthStages { get => growthStages; }
     public int GrowthPerDay { get => growthPerDay; }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlantRenderer : MonoBehaviour
 {
-    [SerializeField] private Image image = null;
+    [SerializeField] private SpriteRenderer spriteRenderer = null;
 
     private PlantStage[] stages;
     private float nextAnimationTime;
@@ -35,7 +35,7 @@ public class PlantRenderer : MonoBehaviour
     private void Animate()
     {
         nextAnimationTime = Time.time + stages[currentGrowthIndex].animationTime;
-        image.sprite = stages[currentGrowthIndex].sprites[currentAnimationIndex];
+        spriteRenderer.sprite = stages[currentGrowthIndex].sprites[currentAnimationIndex];
         currentAnimationIndex = (currentAnimationIndex + 1) % stages[currentGrowthIndex].sprites.Length;
     }
 

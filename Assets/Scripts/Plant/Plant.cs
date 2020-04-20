@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PlantRenderer))]
-public class Plant : MonoBehaviour
+public class Plant : WorldInteractable
 {
     private PlantRenderer plantRenderer;
 
@@ -18,8 +18,10 @@ public class Plant : MonoBehaviour
 
     private int growthStage = 0;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         plantRenderer = GetComponent<PlantRenderer>();
         plantRenderer.Initialize(stats.GrowthStages);
         TimeManager.OnTick += ApplyEffects;
@@ -46,6 +48,11 @@ public class Plant : MonoBehaviour
     }
 
     private void DisruptStats()
+    {
+
+    }
+
+    public void Water(float quantity)
     {
 
     }

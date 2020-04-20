@@ -7,13 +7,17 @@ public class World : MonoBehaviour, IManager
     [SerializeField] private float worldLimit = 12f;
     [SerializeField] private float[] layerHeights = null;
 
+    public Plant flower { get; private set; }
     public Board board { get; private set; }
+    public Well well { get; private set; }
 
     public void Initialize()
     {
-        board = FindObjectOfType<Board>();
         // Detect world limits automatically?
-        // Get elements that populate it, sort by layer
+
+        flower = FindObjectOfType<Plant>();
+        board = FindObjectOfType<Board>();
+        well = FindObjectOfType<Well>();        
     }
 
     public static float GetLayerScaleFactor(int layerNumber)

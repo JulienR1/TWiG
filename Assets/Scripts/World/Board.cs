@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Board : WorldInteractable
 {
-    [SerializeField] private Menu boardMenu;
+    [SerializeField] private Menu boardMenu = null;
     [SerializeField] private TaskSlot[] boardSlots = null;
 
     public bool IsEmpty()
@@ -23,10 +23,16 @@ public class Board : WorldInteractable
             {
                 Task task = slot.GetTask();
                 slot.RemoveTask();
+                UpdateUI();
                 return (T)(object)task;
             }
         }
         return default(T);
+    }
+
+    private void UpdateUI()
+    {
+        print("Update board sprite");
     }
 
     private void OnMouseDown()

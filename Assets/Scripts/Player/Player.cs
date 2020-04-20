@@ -52,6 +52,7 @@ public class Player : MonoBehaviour, IManager
         animator.ToggleAnimation(PlayerAnimator.PlayerState.IDLE);
         animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
         ticksToWait = ticksPerInteraction;
+        taskProgress = 0;
         return true;
     }
 
@@ -62,7 +63,9 @@ public class Player : MonoBehaviour, IManager
             case Task.TaskType.WATER:
                 ExecuteWaterSequence();
                 break;
-            case Task.TaskType.NUTRIENT: break;
+            case Task.TaskType.NUTRIENT:
+                ExecuteNutrientSequence();
+                break;
             case Task.TaskType.APPLE: break;
             case Task.TaskType.TEMPERATURE: break;
             case Task.TaskType.LIGHT: break;
@@ -74,42 +77,85 @@ public class Player : MonoBehaviour, IManager
 
     private void ExecuteWaterSequence()
     {
-        if (taskProgress == 0)
+        switch (taskProgress)
         {
-            controller.MoveToTarget(Game.instance.world.well, ReachedTarget);
-            animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING);
-            animator.ShowInteraction(PlayerAnimator.Interaction.WATER);
+            case 0:
+                controller.MoveToTarget(Game.instance.world.well, ReachedTarget);
+                animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING);
+                animator.ShowInteraction(PlayerAnimator.Interaction.WATER);
+                break;
+            case 1:
+                ticksToWait = Mathf.Clamp(0, Mathf.RoundToInt(Game.instance.world.well.Interact<int>() * currentTask.value), 30);
+                animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
+                handItem.quantity = Game.instance.world.well.GetMaxWater() * currentTask.value;
+                handItem.isHeld = Game.instance.world.well.TakeItem();
+                taskProgress++;
+                break;
+            case 2:
+                controller.MoveToTarget(Game.instance.world.flower, ReachedTarget);
+                animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING_WATER);
+                break;
+            case 3:
+                animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
+                Game.instance.world.flower.Water(handItem.quantity);
+                ticksToWait = ticksPerInteraction;
+                taskProgress++;
+                break;
+            case 4:
+                controller.MoveToTarget(Game.instance.world.well, ReachedTarget);
+                animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING_WATER);
+                break;
+            case 5:
+                Game.instance.world.well.GiveItem();
+                handItem.isHeld = false;
+                CompleteTask();
+                break;
         }
-        else if (taskProgress == 1)
+    }
+
+    private void ExecuteNutrientSequence()
+    {
+        switch (taskProgress)
         {
-            ticksToWait = Mathf.Clamp(0, Mathf.RoundToInt(Game.instance.world.well.Interact<int>() * currentTask.value), 30);
-            animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
-            handItem.quantity = Game.instance.world.well.GetMaxWater() * currentTask.value;
-            handItem.isHeld = Game.instance.world.well.TakeItem();
-            taskProgress++;
-        }
-        else if (taskProgress == 2)
-        {
-            controller.MoveToTarget(Game.instance.world.flower, ReachedTarget);
-            animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING_WATER);
-        }
-        else if (taskProgress == 3)
-        {
-            animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
-            Game.instance.world.flower.Water(handItem.quantity);            
-            ticksToWait = ticksPerInteraction;
-            taskProgress++;            
-        }
-        else if (taskProgress == 4)
-        {
-            controller.MoveToTarget(Game.instance.world.well, ReachedTarget);
-            animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING_WATER);
-        }
-        else if (taskProgress == 5)
-        {
-            Game.instance.world.well.GiveItem();
-            handItem.isHeld = false;
-            CompleteTask();
+            case 0:
+                controller.MoveToTarget(World.composter, ReachedTarget);
+                animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING);
+                animator.ShowInteraction(PlayerAnimator.Interaction.COMPOST);
+                break;
+            case 1:
+                int fertilizerAmount = World.composter.Interact<int>();
+                animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
+                if (fertilizerAmount == 0)
+                {
+                    animator.ShowInteraction(PlayerAnimator.Interaction.FAIL);
+                    CompleteTask();
+                }
+                else
+                {
+                    handItem.quantity = World.composter.TakeFertilizer(currentTask.value);
+                    handItem.isHeld = World.composter.TakeItem();
+                    taskProgress++;
+                }
+                break;
+            case 2:
+                controller.MoveToTarget(Game.instance.world.flower, ReachedTarget);
+                animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING_COMPOST);
+                break;
+            case 3:
+                animator.ShowInteraction(PlayerAnimator.Interaction.INTERACTING);
+                Game.instance.world.flower.Fertilize((int)handItem.quantity);
+                ticksToWait = ticksPerInteraction;
+                taskProgress++;
+                break;
+            case 4:
+                controller.MoveToTarget(World.composter, ReachedTarget);
+                animator.ToggleAnimation(PlayerAnimator.PlayerState.WALKING_COMPOST);
+                break;
+            case 5:
+                World.composter.GiveItem();
+                handItem.isHeld = false;
+                CompleteTask();
+                break;
         }
     }
 
@@ -123,6 +169,7 @@ public class Player : MonoBehaviour, IManager
     private void CompleteTask()
     {
         currentTask = null;
+        taskProgress = 0;
     }
 
     public bool HasTask()

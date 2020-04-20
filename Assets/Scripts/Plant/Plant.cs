@@ -57,6 +57,11 @@ public class Plant : WorldInteractable
 
     }
 
+    public void Fertilize(int amount)
+    {
+
+    }
+
     private void UpdateHealth()
     {
         float healthDiff = 0;

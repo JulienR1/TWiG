@@ -23,16 +23,10 @@ public class Board : WorldInteractable
             {
                 Task task = slot.GetTask();
                 slot.RemoveTask();
-                UpdateUI();
                 return (T)(object)task;
             }
         }
         return default(T);
-    }
-
-    private void UpdateUI()
-    {
-        print("Update board sprite");
     }
 
     private void OnMouseDown()

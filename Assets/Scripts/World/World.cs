@@ -10,6 +10,7 @@ public class World : MonoBehaviour, IManager
     public Plant flower { get; private set; }
     public Board board { get; private set; }
     public Well well { get; private set; }
+    public static Composter composter { get; private set; }
 
     public void Initialize()
     {
@@ -17,7 +18,8 @@ public class World : MonoBehaviour, IManager
 
         flower = FindObjectOfType<Plant>();
         board = FindObjectOfType<Board>();
-        well = FindObjectOfType<Well>();        
+        well = FindObjectOfType<Well>();
+        composter = FindObjectOfType<Composter>();
     }
 
     public static float GetLayerScaleFactor(int layerNumber)

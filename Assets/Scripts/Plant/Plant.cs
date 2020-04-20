@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(PlantRenderer))]
 public class Plant : WorldInteractable
@@ -8,6 +9,7 @@ public class Plant : WorldInteractable
     private PlantRenderer plantRenderer;
 
     [SerializeField] private PlantStats stats = null;
+    [SerializeField] private Slider healthbar = null;
 
     private const int MIN_VALID_STAT_COUNT = 3;
     private int health;
@@ -58,9 +60,9 @@ public class Plant : WorldInteractable
     private void DisruptStats()
     {
         float deltaTime = 1 / Game.instance.timeManager.RevolutionTime();
-        temperature += (temperature - temperatureAverage) / temperatureAverage * stats.DecayRate * deltaTime;
-        water += (water - waterAverage) / waterAverage * stats.DecayRate * deltaTime;
-        nutrients += (nutrients - stats.MinNutrients) / stats.MinNutrients * stats.DecayRate * deltaTime;
+        temperature += (temperature - temperatureAverage + Random.value - 0.5f) / temperatureAverage * stats.DecayRate * deltaTime;
+        water += (water - waterAverage + Random.value - 0.5f) / waterAverage * stats.DecayRate * deltaTime;
+        nutrients += (nutrients - stats.MinNutrients - Random.value - 0.5f) / stats.MinNutrients * stats.DecayRate * deltaTime;
 
         switch (Game.instance.timeManager.GetSeason())
         {
@@ -76,6 +78,10 @@ public class Plant : WorldInteractable
                 water -= Mathf.Abs(water - waterAverage) * stats.DecayRate * deltaTime * 2;
                 break;
         }
+
+        if (nutrients < 0) nutrients = 0;
+        if (water < 0) water = 0;
+        if (temperature < -25) temperature = -25;
     }
 
     public void Water(float quantity)
@@ -104,16 +110,26 @@ public class Plant : WorldInteractable
     {
         float healthDiff = 0;
         healthDiff += GetStatEffectOnHealth(water, stats.MinMaxWater);
-        healthDiff += GetStatEffectOnHealth(lumination, stats.MinMaxLight);
+        //healthDiff += GetStatEffectOnHealth(lumination, stats.MinMaxLight);
         healthDiff += GetStatEffectOnHealth(temperature, stats.MinMaxTemperature);
         healthDiff += ((nutrients >= stats.MinNutrients) ? 1 : (stats.MinNutrients - nutrients) / stats.MinNutrients) * stats.MaxHealthGain / 4f;
 
+        print(healthDiff);
+
         this.health += Mathf.FloorToInt(healthDiff);
+        healthbar.value = this.health / (float)stats.MaxHealth;
     }
 
     private float GetStatEffectOnHealth(float value, Vector2 limits)
     {
-        return ((value > limits.x && value < limits.y) ? 1 : 0 - DistanceFromLimits(value, limits) / 4f) * stats.MaxHealthGain;
+        return ((value > limits.x && value < limits.y) ? 1 : - DistanceFromLimits(value, limits)) * stats.MaxHealthGain / 4f;
+    }
+
+    private void TakeDamage(float amount)
+    {
+        health -= (int) amount;
+        if (health <= 0)
+            Die();
     }
 
     private void Die()

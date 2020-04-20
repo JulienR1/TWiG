@@ -16,10 +16,12 @@ MonoBehaviour:
   health: 20
   minHealthToGrow: 40
   maxHealthGain: 5
-  minMaxWater: {x: 5, y: 10}
+  maxHealth: 100
+  minMaxWater: {x: 10, y: 20}
   minMaxLight: {x: 0, y: 0}
-  minMaxTemperature: {x: 0, y: 0}
-  minNutrients: 0
+  minMaxTemperature: {x: 17, y: 23}
+  minNutrients: 15
+  decayRate: 1
   growthStages:
   - sprites:
     - {fileID: 8591533231565066105, guid: 034031bc64c76964d986a51bd3204121, type: 3}

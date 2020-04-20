@@ -9,6 +9,7 @@ public class PlantStats : ScriptableObject
     [SerializeField] private int health = 20;
     [SerializeField] private int minHealthToGrow = 40;
     [SerializeField] private int maxHealthGain = 5;
+    [SerializeField] private int maxHealth = 100;
 
     [Header("Effect stats")]
     [SerializeField] private Vector2 minMaxWater = Vector2.zero;
@@ -25,6 +26,7 @@ public class PlantStats : ScriptableObject
     public int Health { get => health; }
     public int MinHealthToGrow { get => minHealthToGrow; }
     public int MaxHealthGain { get => maxHealthGain; }
+    public int MaxHealth { get => maxHealth; }
     public Vector2 MinMaxWater { get => minMaxWater; }
     public Vector2 MinMaxLight { get => minMaxLight; }
     public Vector2 MinMaxTemperature { get => minMaxTemperature; }

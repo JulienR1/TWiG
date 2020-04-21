@@ -11,6 +11,11 @@ public class Plant : WorldInteractable
     [SerializeField] private PlantStats stats = null;
     [SerializeField] private Slider healthbar = null;
 
+    [SerializeField] private Transform statMenu = null;
+    [SerializeField] private Stat waterStat = null;
+    [SerializeField] private Stat heatStat = null;
+    [SerializeField] private Stat nutrimentStat = null;
+
     private const int MIN_VALID_STAT_COUNT = 3;
     private int health;
     private float water;
@@ -43,10 +48,10 @@ public class Plant : WorldInteractable
         lightAverage = (stats.MinMaxLight.x + stats.MinMaxLight.y) / 2f;
         temperatureAverage = (stats.MinMaxTemperature.x + stats.MinMaxTemperature.y) / 2f;
 
-        water = waterAverage;
-        lumination = lightAverage;
-        temperature = temperatureAverage;
-        nutrients = stats.MinNutrients;
+        water = waterAverage * 2 / 3f;
+        lumination = lightAverage*2/3f;
+        temperature = temperatureAverage*2/3f;
+        nutrients = stats.MinNutrients*2/3f;
     }
 
     private void ApplyEffects()
@@ -55,14 +60,18 @@ public class Plant : WorldInteractable
         UpdateHealth();
         if (health <= 0)
             Die();
+
+        waterStat.UpdateUI((water - waterAverage) / waterAverage);
+        heatStat.UpdateUI((temperature - temperatureAverage) / temperatureAverage);
+        nutrimentStat.UpdateUI((nutrients - stats.MinNutrients) / stats.MinNutrients);
     }
 
     private void DisruptStats()
     {
         float deltaTime = 1 / Game.instance.timeManager.RevolutionTime();
-        temperature += (temperature - temperatureAverage + Random.value - 0.5f) / temperatureAverage * stats.DecayRate * deltaTime;
-        water += (water - waterAverage + Random.value - 0.5f) / waterAverage * stats.DecayRate * deltaTime;
-        nutrients += (nutrients - stats.MinNutrients - Random.value - 0.5f) / stats.MinNutrients * stats.DecayRate * deltaTime;
+        temperature += (temperature - temperatureAverage + 3*(Random.value - 0.5f)) / temperatureAverage * stats.DecayRate * deltaTime;
+        water += (water - waterAverage + 3*(Random.value - 0.5f)) / waterAverage * stats.DecayRate * deltaTime;
+        nutrients += (nutrients - stats.MinNutrients - 3*(Random.value - 0.5f)) / stats.MinNutrients * stats.DecayRate * deltaTime;
 
         switch (Game.instance.timeManager.GetSeason())
         {
@@ -169,5 +178,15 @@ public class Plant : WorldInteractable
     {
         float center = (limits.x + limits.y) / 2f;
         return Mathf.Abs((value - center) / center);
+    }
+
+    private void OnMouseEnter()
+    {
+        statMenu.gameObject.SetActive(true);
+    }
+
+    private void OnMouseExit()
+    {
+        statMenu.gameObject.SetActive(false);
     }
 }
